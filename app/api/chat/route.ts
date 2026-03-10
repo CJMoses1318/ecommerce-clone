@@ -13,6 +13,6 @@ export async function POST(request: Request) {
 
   return createAgentUIStreamResponse({
     agent,
-    messages,
+    uiMessages: messages,
   });
 }
