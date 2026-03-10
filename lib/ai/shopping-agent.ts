@@ -1,11 +1,6 @@
-import { type Tool, ToolLoopAgent } from "ai";
-import { createAnthropic } from "@ai-sdk/anthropic";
+import { gateway, type Tool, ToolLoopAgent } from "ai";
 import { searchProductsTool } from "@/lib/ai/tools/search-products";
 import { createGetMyOrdersTool } from "@/lib/ai/tools/get-my-orders";
-
-const anthropic = createAnthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 interface ShoppingAgentOptions {
   userId: string | null;
@@ -207,7 +202,7 @@ export function createShoppingAgent({ userId }: ShoppingAgentOptions) {
   }
 
   return new ToolLoopAgent({
-    model: anthropic("claude-3-5-sonnet-20241022"),
+    model: gateway("anthropic/claude-sonnet-4.5"),
     instructions,
     tools,
   });

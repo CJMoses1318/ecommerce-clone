@@ -1,10 +1,5 @@
-import { generateText } from "ai";
-import { createAnthropic } from "@ai-sdk/anthropic";
+import { generateText, gateway } from "ai";
 import { client } from "@/sanity/lib/client";
-
-const anthropic = createAnthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 import {
   ORDERS_LAST_7_DAYS_QUERY,
   ORDER_STATUS_DISTRIBUTION_QUERY,
@@ -216,7 +211,7 @@ export async function GET() {
 
     // Generate AI insights
     const { text } = await generateText({
-      model: anthropic("claude-3-5-sonnet-20241022"),
+      model: gateway("anthropic/claude-sonnet-4"),
       system: `You are an expert e-commerce analytics assistant. Analyze the provided store data and generate actionable insights for the store admin.
 
 Your response must be valid JSON with this exact structure:
