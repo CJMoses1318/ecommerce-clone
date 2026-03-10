@@ -1,16 +1,8 @@
 "use server";
 
-import Stripe from "stripe";
 import { client, writeClient } from "@/sanity/lib/client";
+import { getStripe } from "@/lib/stripe";
 import { CUSTOMER_BY_EMAIL_QUERY } from "@/sanity/queries/customers";
-
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not defined");
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2026-02-25.clover",
-});
 
 /**
  * Gets or creates a Stripe customer by email
@@ -35,7 +27,7 @@ export async function getOrCreateStripeCustomer(
   }
 
   // Check if customer exists in Stripe by email
-  const existingStripeCustomers = await stripe.customers.list({
+  const existingStripeCustomers = await getStripe().customers.list({
     email,
     limit: 1,
   });
@@ -47,7 +39,7 @@ export async function getOrCreateStripeCustomer(
     stripeCustomerId = existingStripeCustomers.data[0].id;
   } else {
     // Create new Stripe customer
-    const newStripeCustomer = await stripe.customers.create({
+    const newStripeCustomer = await getStripe().customers.create({
       email,
       name,
       metadata: {

@@ -1,18 +1,11 @@
 "use server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { client } from "@/sanity/lib/client";
 import { getOrCreateStripeCustomer } from "@/lib/actions/customer";
+import { getStripe } from "@/lib/stripe";
 import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/queries/products";
-
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not defined");
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2026-02-25.clover",
-});
 
 // Types
 interface CartItem {
@@ -133,7 +126,7 @@ export async function createCheckoutSession(
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
       "http://localhost:3000";
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
       line_items: lineItems,
@@ -237,7 +230,7 @@ export async function getCheckoutSession(sessionId: string) {
       return { success: false, error: "Not authenticated" };
     }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    const session = await getStripe().checkout.sessions.retrieve(sessionId, {
       expand: ["line_items", "customer_details"],
     });
 
