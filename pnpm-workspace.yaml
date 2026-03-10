@@ -1,9 +1,9 @@
 packages:
-  - .
-  - clerk-nextjs
+  - "."
+  - "clerk-nextjs"
 
 onlyBuiltDependencies:
-  - '@clerk/shared'
+  - "@clerk/shared"
   - esbuild
   - msw
   - sharp

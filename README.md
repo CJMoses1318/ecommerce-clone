@@ -35,3 +35,20 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # ecommerce-clone
+
+This repo is **standalone**: the repo root **is** the main Next.js app (`package.json` and `app/` live here). Do not connect Vercel to any other repo or set a nested Root Directory.
+
+**Workspace:** `pnpm-workspace.yaml` also includes **`clerk-nextjs/`** — a separate minimal Next + Clerk app for reference or local experiments. The deployed app is still the root package only (Vercel build uses root `pnpm run build`).
+
+## Vercel
+
+1. Import **this** repo only: `github.com/CJMoses1318/ecommerce-clone` (or your fork).
+2. **Root Directory**: leave **empty** (or `.`). Never set `Documents/Builds/...` — that was from an old nested layout.
+3. Framework preset: Next.js (auto-detected). Install: `pnpm install`, build: `pnpm run build`.
+
+From this folder:
+
+```bash
+cd /path/to/ecommerce-clone
+vercel --prod
+```
