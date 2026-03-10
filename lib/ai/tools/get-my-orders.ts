@@ -7,7 +7,7 @@ import {
 } from "@/lib/constants/orderStatus";
 import { formatPrice } from "@/lib/utils";
 import type { ORDERS_BY_USER_QUERYResult } from "@/sanity.types";
-import { ORDERS_BY_USER_QUERY } from "@/sanity/queries/orders";
+import { ORDERS_BY_USER_QUERY } from "@/lib/sanity/queries/orders";
 
 const getMyOrdersSchema = z.object({
   status: z

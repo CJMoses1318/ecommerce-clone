@@ -7,7 +7,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { getOrderStatus } from "@/lib/constants/orderStatus";
 import { formatPrice, formatDate, formatOrderNumber } from "@/lib/utils";
 import { StackedProductImages } from "@/components/app/StackedProductImages";
-import { ORDERS_BY_USER_QUERY } from "@/sanity/queries/orders";
+import { ORDERS_BY_USER_QUERY } from "@/lib/sanity/queries/orders";
 
 export const metadata = {
   title: "Your Orders | Furniture Shop",

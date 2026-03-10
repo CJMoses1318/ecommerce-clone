@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { client, writeClient } from "@/sanity/lib/client";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
-import { ORDER_BY_STRIPE_PAYMENT_ID_QUERY } from "@/sanity/queries/orders";
+import { ORDER_BY_STRIPE_PAYMENT_ID_QUERY } from "@/lib/sanity/queries/orders";
 
 export async function POST(req: Request) {
   // Lazy init: build must not require Stripe env; runtime returns 503 if unset

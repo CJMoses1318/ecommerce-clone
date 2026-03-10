@@ -2,7 +2,7 @@
 
 import { client, writeClient } from "@/sanity/lib/client";
 import { getStripe } from "@/lib/stripe";
-import { CUSTOMER_BY_EMAIL_QUERY } from "@/sanity/queries/customers";
+import { CUSTOMER_BY_EMAIL_QUERY } from "@/lib/sanity/queries/customers";
 
 /**
  * Gets or creates a Stripe customer by email

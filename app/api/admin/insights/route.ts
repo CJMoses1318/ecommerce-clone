@@ -7,7 +7,7 @@ import {
   PRODUCTS_INVENTORY_QUERY,
   UNFULFILLED_ORDERS_QUERY,
   REVENUE_BY_PERIOD_QUERY,
-} from "@/sanity/queries/stats";
+} from "@/lib/sanity/queries/stats";
 
 interface OrderItem {
   quantity: number;
