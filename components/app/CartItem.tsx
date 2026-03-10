@@ -9,7 +9,7 @@ import { AddToCartButton } from "@/components/app/AddToCartButton";
 import { StockBadge } from "@/components/app/StockBadge";
 import { cn, formatPrice } from "@/lib/utils";
 import type { CartItem as CartItemType } from "@/lib/store/cart-store";
-import type { StockInfo } from "../lib/hooks/useCartStock";
+import type { StockInfo } from "@/lib/hooks/useCartStock";
 
 interface CartItemProps {
   item: CartItemType;

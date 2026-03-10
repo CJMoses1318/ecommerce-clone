@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { client } from "@/sanity/lib/client";
 import type { CartItem } from "@/lib/store/cart-store";
-import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/queries/products";
+import { PRODUCTS_BY_IDS_QUERY } from "@/lib/sanity/queries/products";
 
 export interface StockInfo {
   productId: string;

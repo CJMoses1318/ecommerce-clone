@@ -6,12 +6,12 @@ import {
   FILTER_PRODUCTS_BY_PRICE_ASC_QUERY,
   FILTER_PRODUCTS_BY_PRICE_DESC_QUERY,
   FILTER_PRODUCTS_BY_RELEVANCE_QUERY,
-} from "@/sanity/queries/products";
-import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
-import { ProductSection } from "@/components/LandingPage/ProductSection";
-import { CategoryTiles } from "@/components/LandingPage/CategoryTiles";
-import { FeaturedCarousel } from "@/components/LandingPage/FeaturedCarousel";
-import { FeaturedCarouselSkeleton } from "@/components/LandingPage/FeaturedCarouselSkeleton";
+} from "@/lib/sanity/queries/products";
+import { ALL_CATEGORIES_QUERY } from "@/lib/sanity/queries/categories";
+import { ProductSection } from "@/components/app/ProductSection";
+import { CategoryTiles } from "@/components/app/CategoryTiles";
+import { FeaturedCarousel } from "@/components/app/FeaturedCarousel";
+import { FeaturedCarouselSkeleton } from "@/components/app/FeaturedCarouselSkeleton";
 
 interface PageProps {
   searchParams: Promise<{

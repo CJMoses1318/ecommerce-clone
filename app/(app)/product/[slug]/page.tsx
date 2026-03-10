@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ProductGallery } from "@/components/app/ProductGallery";
 import { ProductInfo } from "@/components/app/ProductInfo";
-import { PRODUCT_BY_SLUG_QUERY } from "@/sanity/queries/products";
+import { PRODUCT_BY_SLUG_QUERY } from "@/lib/sanity/queries/products";
 
 interface ProductPageProps {
   params: Promise<{

@@ -13,9 +13,9 @@ import {
   useCartActions,
   useTotalItems,
 } from "@/lib/store/cart-store-provider";
-import { useCartStock } from "../lib/hooks/useCartStock";
-import { CartItem } from "@/components/CartItem";
-import { CartSummary } from "@/components/CartSummary";
+import { useCartStock } from "@/lib/hooks/useCartStock";
+import { CartItem } from "@/components/app/CartItem";
+import { CartSummary } from "@/components/app/CartSummary";
 
 export function CartSheet() {
   const items = useCartItems();

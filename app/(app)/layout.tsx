@@ -1,4 +1,4 @@
-import { CartSheet } from "@/components/CartSheet";
+import { CartSheet } from "@/components/app/CartSheet";
 import { Header } from "@/components/app/Header";
 import { Toaster } from "sonner";
 import { CartStoreProvider } from "@/lib/store/cart-store-provider";

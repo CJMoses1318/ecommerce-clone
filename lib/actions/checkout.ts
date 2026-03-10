@@ -5,7 +5,7 @@ import type Stripe from "stripe";
 import { client } from "@/sanity/lib/client";
 import { getOrCreateStripeCustomer } from "@/lib/actions/customer";
 import { getStripe } from "@/lib/stripe";
-import { PRODUCTS_BY_IDS_QUERY } from "@/sanity/queries/products";
+import { PRODUCTS_BY_IDS_QUERY } from "@/lib/sanity/queries/products";
 
 // Types
 interface CartItem {
