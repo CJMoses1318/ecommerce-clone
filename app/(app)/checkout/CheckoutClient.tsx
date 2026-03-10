@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ShoppingBag, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CheckoutButton } from "@/components/CheckoutButton";
+import { CheckoutButton } from "@/components/app/CheckoutButton";
 import { formatPrice } from "@/lib/utils";
 import {
   useCartItems,
