@@ -1,0 +1,25 @@
+
+> ecommerce-clone@0.1.0 build /Users/cameronmoses/Documents/Builds/ecommerce-clone
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/cameronmoses/pnpm-lock.yaml as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/cameronmoses/Documents/Builds/ecommerce-clone/pnpm-lock.yaml
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: ENOENT: no such file or directory, open '/Users/cameronmoses/Documents/Builds/ecommerce-clone/.next/static/_dK7bcjtExsKW3U2Pqrd-/_buildManifest.js.tmp.xafy3u6cmml'
+    at ignore-listed frames
+ ELIFECYCLE  Command failed with exit code 1.
