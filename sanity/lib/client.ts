@@ -20,7 +20,8 @@ function getReadClient(): SanityClient {
     const id = requireProjectId();
     _client = createClient({
       projectId: id,
-      dataset: dataset || process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+      dataset:
+        dataset || process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
       apiVersion,
       useCdn: true,
       perspective: "published",
@@ -34,7 +35,8 @@ function getWriteClient(): SanityClient {
     const id = requireProjectId();
     _writeClient = createClient({
       projectId: id,
-      dataset: dataset || process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+      dataset:
+        dataset || process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
       apiVersion,
       useCdn: false,
       token: process.env.SANITY_API_TOKEN,

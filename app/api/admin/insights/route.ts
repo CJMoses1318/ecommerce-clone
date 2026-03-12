@@ -1,13 +1,13 @@
-import { generateText, gateway } from "ai";
-import { client } from "@/sanity/lib/client";
+import { gateway, generateText } from "ai";
 import {
-  ORDERS_LAST_7_DAYS_QUERY,
   ORDER_STATUS_DISTRIBUTION_QUERY,
-  TOP_SELLING_PRODUCTS_QUERY,
+  ORDERS_LAST_7_DAYS_QUERY,
   PRODUCTS_INVENTORY_QUERY,
-  UNFULFILLED_ORDERS_QUERY,
   REVENUE_BY_PERIOD_QUERY,
+  TOP_SELLING_PRODUCTS_QUERY,
+  UNFULFILLED_ORDERS_QUERY,
 } from "@/lib/sanity/queries/stats";
+import { client } from "@/sanity/lib/client";
 
 interface OrderItem {
   quantity: number;
@@ -124,7 +124,7 @@ export async function GET() {
       Array.from(productSalesMap.entries()).map(([id, data]) => [
         id,
         data.totalQuantity,
-      ])
+      ]),
     );
 
     const needsRestock = productsInventory
@@ -204,7 +204,7 @@ export async function GET() {
           itemCount: o.itemCount,
         })),
         urgentOrders: unfulfilledOrders.filter(
-          (o) => getDaysSinceOrder(o.createdAt) > 2
+          (o) => getDaysSinceOrder(o.createdAt) > 2,
         ).length,
       },
     };
@@ -238,7 +238,7 @@ Guidelines:
 - Prioritize actionable insights
 - Keep highlights, alerts, and recommendations concise (under 100 characters each)
 - Focus on what the admin can do TODAY
-- Use £ for currency`,
+- Use $ for currency`,
       prompt: `Analyze this e-commerce store data and provide insights:
 
 ${JSON.stringify(dataSummary, null, 2)}
@@ -276,10 +276,10 @@ Generate insights in the required JSON format.`,
       // Fallback insights if parsing fails
       insights = {
         salesTrends: {
-          summary: `Revenue this week: £${currentRevenue.toFixed(2)} (${revenueChange > 0 ? "+" : ""}${revenueChange.toFixed(1)}% vs last week)`,
+          summary: `Revenue this week: $${currentRevenue.toFixed(2)} (${revenueChange > 0 ? "+" : ""}${revenueChange.toFixed(1)}% vs last week)`,
           highlights: [
             `${revenuePeriod.currentOrderCount || 0} orders this week`,
-            `Average order value: £${avgOrderValue.toFixed(2)}`,
+            `Average order value: $${avgOrderValue.toFixed(2)}`,
             topProducts[0]
               ? `Top seller: ${topProducts[0].name}`
               : "No sales data yet",
@@ -329,7 +329,7 @@ Generate insights in the required JSON format.`,
         success: false,
         error: "Failed to generate insights",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

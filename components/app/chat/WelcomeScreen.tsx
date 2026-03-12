@@ -1,4 +1,4 @@
-import { Sparkles, Package, Search } from "lucide-react";
+import { Package, Search, Sparkles } from "lucide-react";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (message: { text: string }) => void;
@@ -7,7 +7,7 @@ interface WelcomeScreenProps {
 
 const productSuggestions = [
   "Show me oak tables",
-  "Leather sofas under £1000",
+  "Leather sofas under $1000",
   "What chairs do you have?",
 ];
 

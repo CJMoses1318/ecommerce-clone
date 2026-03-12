@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { Package, ShoppingBag, Sparkles, User } from "lucide-react";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { Package, ShoppingBag, Sparkles, User } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useCartActions, useTotalItems } from "@/lib/store/cart-store-provider";
 import { useChatActions, useIsChatOpen } from "@/lib/store/chat-store-provider";

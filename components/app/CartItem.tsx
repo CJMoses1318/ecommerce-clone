@@ -1,15 +1,15 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useCartActions } from "@/lib/store/cart-store-provider";
 import { AddToCartButton } from "@/components/app/AddToCartButton";
 import { StockBadge } from "@/components/app/StockBadge";
-import { cn, formatPrice } from "@/lib/utils";
-import type { CartItem as CartItemType } from "@/lib/store/cart-store";
+import { Button } from "@/components/ui/button";
 import type { StockInfo } from "@/lib/hooks/useCartStock";
+import type { CartItem as CartItemType } from "@/lib/store/cart-store";
+import { useCartActions } from "@/lib/store/cart-store-provider";
+import { cn, formatPrice } from "@/lib/utils";
 
 interface CartItemProps {
   item: CartItemType;

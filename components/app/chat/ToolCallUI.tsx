@@ -1,10 +1,10 @@
-import { Search, Package, CheckCircle2, Loader2 } from "lucide-react";
-import type { ToolCallPart } from "./types";
-import type { SearchProductsResult } from "@/lib/ai/types";
+import { CheckCircle2, Loader2, Package, Search } from "lucide-react";
 import type { GetMyOrdersResult } from "@/lib/ai/tools/get-my-orders";
-import { getToolDisplayName } from "./utils";
-import { ProductCardWidget } from "./ProductCardWidget";
+import type { SearchProductsResult } from "@/lib/ai/types";
 import { OrderCardWidget } from "./OrderCardWidget";
+import { ProductCardWidget } from "./ProductCardWidget";
+import type { ToolCallPart } from "./types";
+import { getToolDisplayName } from "./utils";
 
 interface ToolCallUIProps {
   toolPart: ToolCallPart;

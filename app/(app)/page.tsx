@@ -1,5 +1,9 @@
 import { Suspense } from "react";
-import { sanityFetch } from "@/sanity/lib/live";
+import { CategoryTiles } from "@/components/app/CategoryTiles";
+import { FeaturedCarousel } from "@/components/app/FeaturedCarousel";
+import { FeaturedCarouselSkeleton } from "@/components/app/FeaturedCarouselSkeleton";
+import { ProductSection } from "@/components/app/ProductSection";
+import { ALL_CATEGORIES_QUERY } from "@/lib/sanity/queries/categories";
 import {
   FEATURED_PRODUCTS_QUERY,
   FILTER_PRODUCTS_BY_NAME_QUERY,
@@ -7,11 +11,7 @@ import {
   FILTER_PRODUCTS_BY_PRICE_DESC_QUERY,
   FILTER_PRODUCTS_BY_RELEVANCE_QUERY,
 } from "@/lib/sanity/queries/products";
-import { ALL_CATEGORIES_QUERY } from "@/lib/sanity/queries/categories";
-import { ProductSection } from "@/components/app/ProductSection";
-import { CategoryTiles } from "@/components/app/CategoryTiles";
-import { FeaturedCarousel } from "@/components/app/FeaturedCarousel";
-import { FeaturedCarouselSkeleton } from "@/components/app/FeaturedCarouselSkeleton";
+import { sanityFetch } from "@/sanity/lib/live";
 
 interface PageProps {
   searchParams: Promise<{

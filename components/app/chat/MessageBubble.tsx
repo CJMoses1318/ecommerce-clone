@@ -1,4 +1,4 @@
-import { User, Bot } from "lucide-react";
+import { Bot, User } from "lucide-react";
 import { MessageContent } from "./MessageContent";
 
 interface MessageBubbleProps {

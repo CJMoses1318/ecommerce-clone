@@ -1,19 +1,22 @@
 "use client";
 
-import { Suspense, use } from "react";
-import Link from "next/link";
 import {
-  useDocument,
-  useEditDocument,
-  useDocumentProjection,
   type DocumentHandle,
+  useDocument,
+  useDocumentProjection,
+  useEditDocument,
 } from "@sanity/sdk-react";
 import { ArrowLeft, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { Suspense, use } from "react";
+import {
+  DeleteButton,
+  ImageUploader,
+  PublishButton,
+  RevertButton,
+} from "@/components/admin";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -21,12 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  PublishButton,
-  RevertButton,
-  ImageUploader,
-  DeleteButton,
-} from "@/components/admin";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 
 const MATERIALS = [
   { value: "wood", label: "Wood" },
@@ -114,7 +114,7 @@ function StockEditor(handle: DocumentHandle) {
       type="number"
       min="0"
       value={(stock as number) ?? 0}
-      onChange={(e) => editStock(parseInt(e.target.value) || 0)}
+      onChange={(e) => editStock(parseInt(e.target.value, 10) || 0)}
       placeholder="0"
     />
   );
@@ -300,7 +300,7 @@ function ProductDetailContent({ handle }: { handle: DocumentHandle }) {
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="price">Price (£)</Label>
+                <Label htmlFor="price">Price ($)</Label>
                 <Suspense fallback={<Skeleton className="h-10" />}>
                   <PriceEditor {...handle} />
                 </Suspense>

@@ -1,11 +1,11 @@
 "use client";
 
-import { Suspense } from "react";
 import {
+  type DocumentHandle,
   useDocument,
   useEditDocument,
-  type DocumentHandle,
 } from "@sanity/sdk-react";
+import { Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -17,7 +17,7 @@ function PriceInputContent(handle: PriceInputProps) {
 
   return (
     <div className="flex items-center gap-1">
-      <span className="text-sm text-zinc-500">£</span>
+      <span className="text-sm text-zinc-500">$</span>
       <Input
         type="number"
         min={0}

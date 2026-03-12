@@ -1,7 +1,7 @@
 import { PackageSearch } from "lucide-react";
-import { ProductCard } from "./ProductCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { FILTER_PRODUCTS_BY_NAME_QUERYResult } from "@/sanity.types";
+import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
   products: FILTER_PRODUCTS_BY_NAME_QUERYResult;

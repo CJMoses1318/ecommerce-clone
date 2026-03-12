@@ -1,5 +1,5 @@
-import { createAgentUIStreamResponse, type UIMessage } from "ai";
 import { auth } from "@clerk/nextjs/server";
+import { createAgentUIStreamResponse, type UIMessage } from "ai";
 import { createShoppingAgent } from "@/lib/ai/shopping-agent";
 
 export async function POST(request: Request) {

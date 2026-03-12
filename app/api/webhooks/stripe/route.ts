@@ -1,9 +1,8 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
-import { client, writeClient } from "@/sanity/lib/client";
+import type Stripe from "stripe";
+import { createOrderFromStripeSession } from "@/lib/order-from-stripe-session";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
-import { ORDER_BY_STRIPE_PAYMENT_ID_QUERY } from "@/lib/sanity/queries/orders";
 
 export async function POST(req: Request) {
   // Lazy init: build must not require Stripe env; runtime returns 503 if unset
@@ -15,7 +14,7 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json(
       { error: "Stripe is not configured for this deployment" },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
   if (!signature) {
     return NextResponse.json(
       { error: "Missing stripe-signature header" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -39,7 +38,7 @@ export async function POST(req: Request) {
     console.error("Webhook signature verification failed:", message);
     return NextResponse.json(
       { error: `Webhook Error: ${message}` },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -47,7 +46,20 @@ export async function POST(req: Request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      await handleCheckoutCompleted(session, stripe);
+      try {
+        const { created, orderId } =
+          await createOrderFromStripeSession(session, stripe);
+        if (created && orderId) {
+          console.log(`Order created: ${orderId}`);
+        } else if (orderId) {
+          console.log(
+            `Webhook already processed for payment ${session.payment_intent}, skipping`,
+          );
+        }
+      } catch (error) {
+        console.error("Error handling checkout.session.completed:", error);
+        throw error;
+      }
       break;
     }
     default:
@@ -55,110 +67,4 @@ export async function POST(req: Request) {
   }
 
   return NextResponse.json({ received: true });
-}
-
-async function handleCheckoutCompleted(
-  session: Stripe.Checkout.Session,
-  stripe: Stripe
-) {
-  const stripePaymentId = session.payment_intent as string;
-
-  try {
-    // Idempotency check: prevent duplicate processing on webhook retries
-    const existingOrder = await client.fetch(ORDER_BY_STRIPE_PAYMENT_ID_QUERY, {
-      stripePaymentId,
-    });
-
-    if (existingOrder) {
-      console.log(
-        `Webhook already processed for payment ${stripePaymentId}, skipping`
-      );
-      return;
-    }
-
-    // Extract metadata
-    const {
-      clerkUserId,
-      userEmail,
-      sanityCustomerId,
-      productIds: productIdsString,
-      quantities: quantitiesString,
-    } = session.metadata ?? {};
-
-    if (!clerkUserId || !productIdsString || !quantitiesString) {
-      console.error("Missing metadata in checkout session");
-      return;
-    }
-
-    const productIds = productIdsString.split(",");
-    const quantities = quantitiesString.split(",").map(Number);
-
-    // Get line items from Stripe
-    const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
-
-    // Build order items array
-    const orderItems = productIds.map((productId, index) => ({
-      _key: `item-${index}`,
-      product: {
-        _type: "reference" as const,
-        _ref: productId,
-      },
-      quantity: quantities[index],
-      priceAtPurchase: lineItems.data[index]?.amount_total
-        ? lineItems.data[index].amount_total / 100
-        : 0,
-    }));
-
-    // Generate order number
-    const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-
-    // Extract shipping address
-    const shippingAddress = session.customer_details?.address;
-    const address = shippingAddress
-      ? {
-          name: session.customer_details?.name ?? "",
-          line1: shippingAddress.line1 ?? "",
-          line2: shippingAddress.line2 ?? "",
-          city: shippingAddress.city ?? "",
-          postcode: shippingAddress.postal_code ?? "",
-          country: shippingAddress.country ?? "",
-        }
-      : undefined;
-
-    // Create order in Sanity with customer reference
-    const order = await writeClient.create({
-      _type: "order",
-      orderNumber,
-      ...(sanityCustomerId && {
-        customer: {
-          _type: "reference",
-          _ref: sanityCustomerId,
-        },
-      }),
-      clerkUserId,
-      email: userEmail ?? session.customer_details?.email ?? "",
-      items: orderItems,
-      total: (session.amount_total ?? 0) / 100,
-      status: "paid",
-      stripePaymentId,
-      address,
-      createdAt: new Date().toISOString(),
-    });
-
-    console.log(`Order created: ${order._id} (${orderNumber})`);
-
-    // Decrease stock for all products in a single transaction
-    await productIds
-      .reduce(
-        (tx, productId, i) =>
-          tx.patch(productId, (p) => p.dec({ stock: quantities[i] })),
-        writeClient.transaction()
-      )
-      .commit();
-
-    console.log(`Stock updated for ${productIds.length} products`);
-  } catch (error) {
-    console.error("Error handling checkout.session.completed:", error);
-    throw error; // Re-throw to return 500 and trigger Stripe retry
-  }
 }

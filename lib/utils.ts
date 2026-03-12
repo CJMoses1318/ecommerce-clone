@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPrice(
   amount: number | null | undefined,
-  currency = "$"
+  currency = "$",
 ): string {
   return `${currency}${(amount ?? 0).toFixed(2)}`;
 }
@@ -45,12 +45,12 @@ const DATE_FORMAT_OPTIONS: Record<
 export function formatDate(
   date: string | null | undefined,
   format: DateFormatOption = "long",
-  fallback = "Date unknown"
+  fallback = "Date unknown",
 ): string {
   if (!date) return fallback;
   return new Date(date).toLocaleDateString(
     "en-US",
-    DATE_FORMAT_OPTIONS[format]
+    DATE_FORMAT_OPTIONS[format],
   );
 }
 
@@ -60,7 +60,7 @@ export function formatDate(
  * @returns Shortened order number (e.g., "ABC123") or "N/A" if null
  */
 export function formatOrderNumber(
-  orderNumber: string | null | undefined
+  orderNumber: string | null | undefined,
 ): string {
   if (!orderNumber) return "N/A";
   return orderNumber.split("-").pop() ?? orderNumber;

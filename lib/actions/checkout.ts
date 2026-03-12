@@ -2,10 +2,11 @@
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 import type Stripe from "stripe";
-import { client } from "@/sanity/lib/client";
 import { getOrCreateStripeCustomer } from "@/lib/actions/customer";
-import { getStripe } from "@/lib/stripe";
+import { createOrderFromStripeSession } from "@/lib/order-from-stripe-session";
 import { PRODUCTS_BY_IDS_QUERY } from "@/lib/sanity/queries/products";
+import { getStripe } from "@/lib/stripe";
+import { client } from "@/sanity/lib/client";
 
 // Types
 interface CartItem {
@@ -27,7 +28,7 @@ interface CheckoutResult {
  * Validates stock and prices against Sanity before creating session
  */
 export async function createCheckoutSession(
-  items: CartItem[]
+  items: CartItem[],
 ): Promise<CheckoutResult> {
   try {
     // 1. Verify user is authenticated
@@ -58,7 +59,7 @@ export async function createCheckoutSession(
 
     for (const item of items) {
       const product = products.find(
-        (p: { _id: string }) => p._id === item.productId
+        (p: { _id: string }) => p._id === item.productId,
       );
 
       if (!product) {
@@ -73,7 +74,7 @@ export async function createCheckoutSession(
 
       if (item.quantity > (product.stock ?? 0)) {
         validationErrors.push(
-          `Only ${product.stock} of "${product.name}" available`
+          `Only ${product.stock} of "${product.name}" available`,
         );
         continue;
       }
@@ -196,11 +197,10 @@ export async function createCheckoutSession(
     console.error("Checkout error:", error);
 
     // Surface known errors so the user can fix configuration
-    const message =
-      error instanceof Error ? error.message : String(error);
+    const message = error instanceof Error ? error.message : String(error);
     if (
       message.includes("Insufficient permissions") ||
-      message.includes("permission \"create\" required")
+      message.includes('permission "create" required')
     ) {
       return {
         success: false,
@@ -208,7 +208,10 @@ export async function createCheckoutSession(
           "Checkout could not save customer. Add a Sanity API token with create/update permissions (SANITY_API_TOKEN) in .env.local.",
       };
     }
-    if (message.includes("STRIPE_SECRET_KEY") || message.includes("No such customer")) {
+    if (
+      message.includes("STRIPE_SECRET_KEY") ||
+      message.includes("No such customer")
+    ) {
       return { success: false, error: message };
     }
 
@@ -258,5 +261,41 @@ export async function getCheckoutSession(sessionId: string) {
   } catch (error) {
     console.error("Get session error:", error);
     return { success: false, error: "Could not retrieve order details" };
+  }
+}
+
+/**
+ * Ensures the order exists in Sanity for this checkout session.
+ * Called from the success page so "My Orders" shows the order even when the
+ * Stripe webhook was missed (e.g. local dev without stripe listen) or delayed.
+ * Idempotent: if the webhook already created the order, this is a no-op.
+ */
+export async function ensureOrderFromSession(sessionId: string): Promise<{
+  ok: boolean;
+  error?: string;
+}> {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return { ok: false, error: "Not authenticated" };
+    }
+
+    const stripe = getStripe();
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["line_items", "customer_details"],
+    });
+
+    if (session.metadata?.clerkUserId !== userId) {
+      return { ok: false, error: "Session not found" };
+    }
+
+    await createOrderFromStripeSession(session, stripe);
+    return { ok: true };
+  } catch (error) {
+    console.error("ensureOrderFromSession error:", error);
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Failed to ensure order",
+    };
   }
 }

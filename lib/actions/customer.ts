@@ -1,8 +1,8 @@
 "use server";
 
-import { client, writeClient } from "@/sanity/lib/client";
-import { getStripe } from "@/lib/stripe";
 import { CUSTOMER_BY_EMAIL_QUERY } from "@/lib/sanity/queries/customers";
+import { getStripe } from "@/lib/stripe";
+import { client, writeClient } from "@/sanity/lib/client";
 
 /**
  * Gets or creates a Stripe customer by email
@@ -11,7 +11,7 @@ import { CUSTOMER_BY_EMAIL_QUERY } from "@/lib/sanity/queries/customers";
 export async function getOrCreateStripeCustomer(
   email: string,
   name: string,
-  clerkUserId: string
+  clerkUserId: string,
 ): Promise<{ stripeCustomerId: string; sanityCustomerId: string }> {
   // First, check if customer already exists in Sanity
   const existingCustomer = await client.fetch(CUSTOMER_BY_EMAIL_QUERY, {

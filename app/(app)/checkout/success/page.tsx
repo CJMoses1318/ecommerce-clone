@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
+import {
+  ensureOrderFromSession,
+  getCheckoutSession,
+} from "@/lib/actions/checkout";
 import { SuccessClient } from "./SuccessClient";
-import { getCheckoutSession } from "@/lib/actions/checkout";
 
 export const metadata = {
   title: "Order Confirmed | Furniture Shop",
@@ -24,6 +27,9 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   if (!result.success || !result.session) {
     redirect("/");
   }
+
+  // Ensure order exists in Sanity so "My Orders" shows it (handles missed/delayed webhook)
+  await ensureOrderFromSession(sessionId);
 
   return <SuccessClient session={result.session} />;
 }

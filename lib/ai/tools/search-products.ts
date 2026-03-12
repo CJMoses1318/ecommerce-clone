@@ -1,12 +1,12 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { sanityFetch } from "@/sanity/lib/live";
-import { formatPrice } from "@/lib/utils";
-import { getStockStatus, getStockMessage } from "@/lib/constants/stock";
-import { MATERIAL_VALUES, COLOR_VALUES } from "@/lib/constants/filters";
-import type { AI_SEARCH_PRODUCTS_QUERYResult } from "@/sanity.types";
 import type { SearchProduct } from "@/lib/ai/types";
+import { COLOR_VALUES, MATERIAL_VALUES } from "@/lib/constants/filters";
+import { getStockMessage, getStockStatus } from "@/lib/constants/stock";
 import { AI_SEARCH_PRODUCTS_QUERY } from "@/lib/sanity/queries/products";
+import { formatPrice } from "@/lib/utils";
+import { sanityFetch } from "@/sanity/lib/live";
+import type { AI_SEARCH_PRODUCTS_QUERYResult } from "@/sanity.types";
 
 const productSearchSchema = z.object({
   query: z
@@ -14,14 +14,14 @@ const productSearchSchema = z.object({
     .optional()
     .default("")
     .describe(
-      "Search term to find products by name, description, or category (e.g., 'oak table', 'leather sofa', 'dining')"
+      "Search term to find products by name, description, or category (e.g., 'oak table', 'leather sofa', 'dining')",
     ),
   category: z
     .string()
     .optional()
     .default("")
     .describe(
-      "Filter by category slug (e.g., 'sofas', 'tables', 'chairs', 'storage')"
+      "Filter by category slug (e.g., 'sofas', 'tables', 'chairs', 'storage')",
     ),
   material: z
     .enum(["", ...MATERIAL_VALUES])
@@ -37,12 +37,12 @@ const productSearchSchema = z.object({
     .number()
     .optional()
     .default(0)
-    .describe("Minimum price in GBP (e.g., 100)"),
+    .describe("Minimum price in USD (e.g., 100)"),
   maxPrice: z
     .number()
     .optional()
     .default(0)
-    .describe("Maximum price in GBP (e.g., 500). Use 0 for no maximum."),
+    .describe("Maximum price in USD (e.g., 500). Use 0 for no maximum."),
 });
 
 export const searchProductsTool = tool({
